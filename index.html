@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hecho para ti 🍅 · Juego de cumpleaños</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#ffe3dc; --bg2:#ffd0e0; --bg3:#ffeccf; --panel:rgba(255,255,255,.88); --surface:#ffffff; --ink:#3a1410; --muted:#8a5a52;
+  --tomato:#e63b2a; --tomato-ink:#ffffff; --leaf:#1f6b43; --leaf-soft:#d9f0e2; --line:#f3cfc6; color-scheme:light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg1:#2a0f0c; --bg2:#35101f; --bg3:#2c1a0c; --panel:rgba(43,24,20,.88); --surface:#3a201a; --ink:#ffe9e4; --muted:#d3a79d;
+    --tomato:#ff6250; --tomato-ink:#2b0b07; --leaf:#7fd6a2; --leaf-soft:#173626; --line:#5a342c; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg1:#2a0f0c; --bg2:#35101f; --bg3:#2c1a0c; --panel:rgba(43,24,20,.88); --surface:#3a201a; --ink:#ffe9e4; --muted:#d3a79d;
+  --tomato:#ff6250; --tomato-ink:#2b0b07; --leaf:#7fd6a2; --leaf-soft:#173626; --line:#5a342c; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{color:var(--ink);font:400 17px/1.55 "Nunito",system-ui,sans-serif;background:var(--bg1);overflow-x:hidden}
+h1,h2{font-family:"Bagel Fat One","Nunito",system-ui,sans-serif;font-weight:400;line-height:1.1;margin:0}
+
+/* Fondo en movimiento */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  background:linear-gradient(120deg,var(--bg1),var(--bg2),var(--bg3),var(--bg2),var(--bg1));background-size:300% 300%;animation:flow 18s ease-in-out infinite}
+@keyframes flow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.bg i{position:absolute;bottom:-60px;font-style:normal;opacity:.55;animation:rise linear infinite}
+@keyframes rise{0%{transform:translateY(0) rotate(0) translateX(0)}50%{transform:translateY(-60vh) rotate(180deg) translateX(30px)}100%{transform:translateY(-120vh) rotate(360deg) translateX(-20px)}}
+
+.app{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:18px 16px 40px;min-height:100vh;display:flex;flex-direction:column}
+.brand{text-align:center;font-family:"Bagel Fat One",sans-serif;color:var(--tomato);font-size:22px;margin:4px 0 12px}
+
+/* Botones de navegación */
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none;justify-content:center;flex-wrap:wrap}
+.tabs button{all:unset;cursor:pointer;flex:none;font-weight:800;font-size:15px;padding:8px 16px;border-radius:99px;background:var(--panel);border:2px solid var(--line);color:var(--ink);transition:transform .15s,background .15s}
+.tabs button:hover{transform:translateY(-2px)}
+.tabs button:focus-visible{outline:3px solid var(--tomato);outline-offset:2px}
+.tabs button[aria-selected="true"]{background:var(--tomato);border-color:var(--tomato);color:var(--tomato-ink)}
+
+/* Paneles: se ve uno a la vez */
+.panel{display:none;background:var(--panel);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:2px solid var(--line);border-radius:28px;padding:28px 22px;flex:1;animation:pop .35s ease-out}
+.panel.on{display:block}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.panel h2{font-size:clamp(30px,6vw,42px);margin-bottom:6px}
+.sub{color:var(--muted);margin:0 0 20px}
+
+/* Inicio */
+.home{text-align:center;padding:24px 0 8px}
+.big-tomato{font-size:110px;line-height:1;display:inline-block;animation:float 3s ease-in-out infinite;cursor:pointer;background:none;border:0;padding:0}
+@keyframes float{50%{transform:translateY(-14px) rotate(6deg)}}
+.home h1{font-size:clamp(46px,11vw,88px);color:var(--tomato);margin:6px 0 12px}
+.home p{max-width:520px;margin:0 auto 22px;font-size:19px;color:var(--muted)}
+.home p b{color:var(--ink)}
+.cta,.next{all:unset;cursor:pointer;display:inline-block;background:var(--tomato);color:var(--tomato-ink);font-weight:800;padding:12px 26px;border-radius:99px;font-size:17px;transition:transform .15s}
+.cta:hover,.next:hover{transform:scale(1.05)}
+.cta:focus-visible,.next:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.foot{text-align:center;margin-top:24px}
+
+/* Reglas */
+.rules{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.rules li{display:flex;gap:14px;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:14px 16px}
+.rules .ic{flex:none;width:44px;height:44px;border-radius:50%;background:var(--leaf-soft);display:grid;place-items:center;font-size:22px}
+.rules li.warn{border-color:var(--tomato)}
+.rules li.warn .ic{background:var(--tomato)}
+
+/* Premios */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:10px}
+.tag{display:flex;align-items:center;gap:12px;background:var(--surface);border:2px dashed var(--line);border-radius:16px;padding:10px 12px 10px 16px}
+.tag .n{flex:1;font-weight:600;line-height:1.35}
+.pts{flex:none;min-width:64px;text-align:center;background:var(--tomato);color:var(--tomato-ink);border-radius:14px;padding:6px 10px;font-family:"Bagel Fat One",sans-serif;font-size:22px;line-height:1}
+.pts small{display:block;font:800 11px/1.2 "Nunito",sans-serif;margin-top:2px}
+
+/* Caja final */
+.box{text-align:center;background:var(--leaf);color:#fff;border-radius:24px;padding:40px 20px}
+:root[data-theme="dark"] .box{color:#0b2a19}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .box{color:#0b2a19}}
+.box button{all:unset;cursor:pointer;font-size:88px;line-height:1;display:inline-block;padding:6px;border-radius:20px}
+.box button:focus-visible{outline:3px solid currentColor;outline-offset:4px}
+.box button.shake{animation:shake .6s}
+@keyframes shake{20%{transform:rotate(-12deg)}40%{transform:rotate(10deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(5deg)}}
+.box h2{margin:10px 0 6px}
+.box .big{font-family:"Bagel Fat One",sans-serif;font-size:46px;line-height:1}
+.box p{margin:10px auto 0;max-width:420px;min-height:3.2em}
+
+/* Huellas de gato y gatito caminando */
+.bg b{position:absolute;font-weight:400;font-size:30px;opacity:0;animation:step 10s ease-in-out infinite}
+@keyframes step{0%{opacity:0;transform:rotate(var(--r)) scale(.6)}10%{opacity:.75;transform:rotate(var(--r)) scale(1)}60%{opacity:.75}100%{opacity:0;transform:rotate(var(--r)) scale(1)}}
+.bg .cat{position:absolute;bottom:10px;left:-70px;font-size:42px;opacity:.9;animation:walk 26s linear infinite}
+@keyframes walk{to{transform:translateX(calc(100vw + 140px))}}
+
+/* Contador de puntos */
+.score{position:sticky;top:env(safe-area-inset-top,0px);z-index:4;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;background:var(--panel);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:2px solid var(--line);border-radius:22px;padding:8px 14px;margin:0 0 12px}
+.score label{font-weight:800}
+.score button{all:unset;cursor:pointer;width:38px;height:38px;border-radius:50%;background:var(--tomato);color:var(--tomato-ink);display:grid;place-items:center;font-weight:800;font-size:24px}
+.score button:focus-visible,.score input:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.score input{width:88px;text-align:center;font:400 28px "Bagel Fat One",sans-serif;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:2px}
+.score .av{font-weight:800;color:var(--leaf);font-size:15px}
+.tag{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;transition:transform .15s}
+.tag:hover{transform:translateY(-2px)}
+.tag:focus-visible{outline:3px solid var(--tomato);outline-offset:2px}
+.tag.ok{border:2px solid var(--tomato)}
+.tag.no{opacity:.6}
+.tag.done{background:var(--leaf-soft);border:2px solid var(--leaf)}
+.tag.done .n{text-decoration:line-through}
+.tag.done .pts{background:var(--leaf);color:#fff}
+.tag .pts small{font-size:10px}
+
+.score .lbl{font-weight:800}
+.score .num{font:400 32px "Bagel Fat One",sans-serif;color:var(--tomato);min-width:56px;text-align:center}
+.score .msg{flex-basis:100%;text-align:center;color:var(--muted);font-weight:600}
+.score .msg:empty{display:none}
+.tag{cursor:default}.tag:hover{transform:none}
+.tag .cod{flex:none;font-weight:800;font-size:12px;color:var(--muted);border:1.5px solid var(--line);border-radius:8px;padding:1px 6px}
+@media (prefers-reduced-motion: reduce){.bg,.bg i,.big-tomato,.panel,.box button.shake{animation:none}.bg i,.bg b,.bg .cat{display:none}}
+</style>
+</head>
+<body>
+<div class="bg" id="bg" aria-hidden="true"></div>
+
+<div class="app">
+  <div class="brand">🍅 Hecho para ti</div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+
+  <div class="score" id="score">
+    <span class="lbl">🍅 Mis puntos</span>
+    <span class="num" id="pv">0</span>
+    <span class="av" id="av">Cargando…</span>
+    <span class="av msg" id="msgp"></span>
+  </div>
+
+  <section class="panel on" id="p-inicio" role="tabpanel">
+    <div class="home">
+      <button class="big-tomato" id="tom" aria-label="Tomate">🍅</button>
+      <h1>Hecho para ti</h1>
+      <p>Durante varios días enviaré <b>retos y preguntas</b>. Cada respuesta correcta suma puntos para ganar muchos premios y sorpresas por tu cumpleaños, tomatito.</p>
+      <button class="cta" data-go="reglas">Ver las reglas</button>
+    </div>
+  </section>
+
+  <section class="panel" id="p-reglas" role="tabpanel">
+    <h2>Reglas del juego</h2>
+    <p class="sub">Cinco cosas que tienes que saber antes de empezar.</p>
+    <ul class="rules">
+      <li><span class="ic">📱</span><span>Los retos llegan por WhatsApp, Telegram, TikTok o cualquier plataforma.</span></li>
+      <li><span class="ic">📊</span><span>Después de cada respuesta te mando tu marcador actualizado.</span></li>
+      <li><span class="ic">🛍️</span><span>Los puntos se canjean en la tienda hasta que termine el mes de tu cumpleaños.</span></li>
+      <li><span class="ic">1️⃣</span><span>Cada premio se puede canjear solo una vez.</span></li>
+      <li class="warn"><span class="ic">⏰</span><span>Cada reto tiene un tiempo límite. Si no lo respondes a tiempo, pierdes el punto, sin excepciones.</span></li>
+    </ul>
+    <div class="foot"><button class="next" data-go="pequenos">Ir a la tienda 🍬</button></div>
+  </section>
+
+  <div id="tienda"></div>
+
+  <section class="panel" id="p-final" role="tabpanel">
+    <div class="box">
+      <button id="caja" aria-label="Sacudir la caja misteriosa">🎁</button>
+      <h2>Premio final misterioso</h2>
+      <div class="big">800+ puntos</div>
+      <p id="msg">Caja sellada: se revela solo al final del juego. Toca la caja para sacudirla.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+var cats=[
+ {id:"pequenos",l:"🍬 Pequeños",t:"Premios pequeños",nx:"comidas",items:[
+  ["Un bolo",50],["Un café simple",70],["Un jugo o helados sin pasas",80],["Un regalo a mano (pequeño y fácil)",60],
+  ["Te paso canciones que me recuerden a ti",70],["Una carta explicando lo que pienso de ti",100],["Vale por un favor sin preguntas",150],
+  ["Te ayudo con una tarea o recado",100],["Vale por ganar una discusión (una sola vez)",200],["Vale para que haga un video que quieras",200],
+  ["Te digo sí a todo (no incluye dinero)",300],["Cumplo el reto que me pongas a tu elección",200]]},
+ {id:"comidas",l:"🍕 Comidas",t:"Comidas",nx:"salidas",items:[
+  ["Hamburguesa de tu casa",150],["Salchipapa + refresco",110],["Pollitoooo de los julios",160],["Ir por comida china",180],
+  ["Comida a la parrilla",180],["Desayuno o almuerzo que yo cocino o te llevo",200],["Ir por cervezas artesanales",220],
+  ["Vamos a tomar algún traguito a tu elección",200],["Ir a comer donde quieras",350],["Cualquier postre, desde pasteles hasta algo dulce",120],
+  ["Voy a tu casa en la noche y te llevo el antojo que quieras",300],["Un paquete completo de chocolates, dulces o antojo a tu elección",300]]},
+ {id:"salidas",l:"🎬 Salidas",t:"Salidas y planes",nx:"regalos",items:[
+  ["Cine con snacks incluidos",250],["Tarde de cafetería o heladería",200],["Paseo por un lugar bonito",250],
+  ["Tarde de series o películas en casa (animadas, a tu preferencia)",200],["Noche de videojuegos",200],["Anticafé con juegos y charla",230],
+  ["Vamos a un bar o una discoteca",250],["Hacer algo sano (cocinar, pintar, etc.)",250],["Salimos en bicicleta",150],
+  ["Te enseño a jugar raquet",200],["Vamos a la piscina",200],["Vamos a donde quieras y a la hora que desees",300]]},
+ {id:"regalos",l:"🎁 Regalos",t:"Regalos",nx:"final",items:[
+  ["Peluche de un gato",400],["Una pulsera a tu elección",350],["Aretes o anillo",400],["Funda de laptop",450],["Termo",450],
+  ["Billetera",400],["Regalo de alguna temática de TikTok (manualidad grande)",600],["Bufanda",500],
+  ["Algún adorno o figura que te llame la atención",250],["Regalo a tu elección",700]]}
+];
+var nextLabel={comidas:"Ver comidas 🍕",salidas:"Ver salidas 🎬",regalos:"Ver regalos 🎁",final:"El premio final 👑"};
+document.getElementById("tienda").innerHTML=cats.map(function(c){
+  return '<section class="panel" id="p-'+c.id+'" role="tabpanel"><h2>'+c.t+'</h2><p class="sub">Junta puntos y mira qué premios ya puedes canjear.</p><div class="grid">'+
+  c.items.map(function(i,x){var cd=c.id.charAt(0).toUpperCase()+(x+1);return '<div class="tag" data-k="'+cd+'" data-p="'+i[1]+'"><span class="cod">'+cd+'</span><span class="n">'+i[0]+'</span><span class="pts">'+i[1]+'<small>puntos</small></span></div>';}).join("")+
+  '</div><div class="foot"><button class="next" data-go="'+c.nx+'">'+nextLabel[c.nx]+'</button></div></section>';
+}).join("");
+
+var tabs=[["inicio","🏠 Inicio"],["reglas","📜 Reglas"]].concat(cats.map(function(c){return [c.id,c.l];})).concat([["final","👑 Final"]]);
+var tb=document.getElementById("tabs");
+tb.innerHTML=tabs.map(function(t){return '<button role="tab" data-go="'+t[0]+'" aria-selected="false">'+t[1]+'</button>';}).join("");
+
+function show(id){
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.toggle("on",p.id==="p-"+id);});
+  tb.querySelectorAll("button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.go===id?"true":"false");});
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-go]");if(b)show(b.dataset.go);});
+show("inicio");
+
+// Fondo: tomates y corazones flotando
+var em=["🍅","🐾","💖","✨","🐾","🍓","🎈","🐱","🍅","🐾"],bg=document.getElementById("bg");
+for(var k=0;k<22;k++){
+  var s=document.createElement("i");
+  s.textContent=em[k%em.length];
+  s.style.left=(Math.random()*100)+"%";
+  s.style.fontSize=(18+Math.random()*30)+"px";
+  s.style.animationDuration=(14+Math.random()*16)+"s";
+  s.style.animationDelay=(-Math.random()*30)+"s";
+  bg.appendChild(s);
+}
+
+// Huellas de gato: dos caminitos que aparecen paso a paso
+[[4,0],[46,5]].forEach(function(tr){
+  for(var i=0;i<11;i++){
+    var p=document.createElement("b");
+    p.textContent="🐾";
+    p.style.left=(tr[0]+i*6.5+(i%2?3:0))+"%";
+    p.style.top=(88-i*7.5+(i%2?2.5:-2.5))+"%";
+    p.style.setProperty("--r","20deg");
+    p.style.animationDelay=(tr[1]+i*0.7)+"s";
+    bg.appendChild(p);
+  }
+});
+var ct=document.createElement("span");ct.className="cat";ct.textContent="🐈";bg.appendChild(ct);
+
+// Marcador: se lee de puntos.json (solo lectura)
+var st={e:0,r:{}};
+var pv=document.getElementById("pv"),av=document.getElementById("av"),mp=document.getElementById("msgp");
+function spent(){var s=0;document.querySelectorAll(".tag").forEach(function(t){if(st.r[t.dataset.k])s+=+t.dataset.p;});return s;}
+function render(){
+  var s=spent(),d=st.e-s;pv.textContent=d;av.textContent="Ganados: "+st.e+" · Canjeados: "+s;
+  document.querySelectorAll(".tag").forEach(function(t){
+    var p=+t.dataset.p,done=!!st.r[t.dataset.k];
+    t.classList.toggle("done",done);t.classList.toggle("ok",!done&&d>=p);t.classList.toggle("no",!done&&d<p);
+    t.querySelector("small").textContent=done?"canjeado":(d>=p?"¡ya puedes!":"faltan "+(p-d));
+  });
+}
+function load(){
+  fetch("puntos.json?t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(j){
+    st.e=Math.max(0,+j.ganados||0);st.r={};
+    (j.canjeados||[]).forEach(function(c){st.r[String(c).trim().toUpperCase()]=1;});
+    mp.textContent=j.mensaje||"";render();
+  }).catch(function(){av.textContent="No pude cargar los puntos. Recarga la página.";});
+}
+load();
+document.addEventListener("visibilitychange",function(){if(!document.hidden)load();});
+
+var tom=document.getElementById("tom");
+tom.addEventListener("click",function(){show("reglas");});
+
+var n=0,msgs=["¡Shhh! No se oye nada… 👀","Algo se movió adentro. ¡Pero no te lo digo!","Paciencia, tomatito. Se abre solo al final. 🍅"];
+var caja=document.getElementById("caja"),msg=document.getElementById("msg");
+caja.addEventListener("click",function(){
+  caja.classList.remove("shake");void caja.offsetWidth;caja.classList.add("shake");
+  msg.textContent=msgs[n%msgs.length];n++;
+});
+</script>
+</body>
+</html>
